@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas JS pe GitHub Pages</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000;"></canvas>
+    <script>
+        // Cod JS pentru desenare (ex: efect foc static)
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+        function drawFire() {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(150, 300, 100, 100); // Bază roșie
+            ctx.fillStyle = 'orange';
+            ctx.fillRect(150, 200, 100, 100);
+            ctx.fillStyle = 'yellow';
+            ctx.fillRect(150, 100, 100, 100); // Vârf galben
+        }
+        drawFire();
+    </script>
+</body>
+</html>
