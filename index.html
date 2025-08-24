@@ -1,24 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Canvas JS pe GitHub Pages</title>
+  <meta charset="UTF-8">
+  <title>Guitar Notes on Canvas</title>
+  <style>
+    body { background: #222; color: white; text-align: center; }
+    canvas { background: #111; margin-top: 20px; border: 1px solid #555; }
+  </style>
 </head>
 <body>
-    <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000;"></canvas>
-    <script>
-        // Cod JS pentru desenare (ex: efect foc static)
-        var canvas = document.getElementById('myCanvas');
-        var ctx = canvas.getContext('2d');
-        function drawFire() {
-            ctx.fillStyle = 'red';
-            ctx.fillRect(150, 300, 100, 100); // Bază roșie
-            ctx.fillStyle = 'orange';
-            ctx.fillRect(150, 200, 100, 100);
-            ctx.fillStyle = 'yellow';
-            ctx.fillRect(150, 100, 100, 100); // Vârf galben
-        }
-        drawFire();
-    </script>
+  <h2>Vizualizare note chitara 🎸</h2>
+  <canvas id="guitarCanvas" width="1200" height="400"></canvas>
+
+  <script>
+    // ---- Generare note ----
+    function generateNote(startTime) {
+      return {
+        time: startTime,
+        length: Math.floor(Math.random() * 3000) + 200,
+        volume: Math.floor(Math.random() * 100) + 1,
+        fret: Math.floor(Math.random() * 22)
+      };
+    }
+
+    const strings = Array.from({ length: 6 }, () => {
+      const noteCount = Math.floor(Math.random() * 11) + 5;
+      let currentTime = 0;
+      return Array.from({ length: noteCount }, () => {
+        const note = generateNote(currentTime);
+        currentTime = note.time + note.length + Math.floor(Math.random() * 500);
+        return note;
+      });
+    });
+
+    // ---- Desen pe canvas ----
+    const canvas = document.getElementById("guitarCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const stringSpacing = 60; // distanța între corzi
+    const noteHeight = 20;    // grosimea unei note
+
+    ctx.font = "12px Arial";
+    ctx.fillStyle = "white";
+
+    strings.forEach((notes, stringIndex) => {
+      const y = (stringIndex + 1) * stringSpacing;
+
+      // desenăm linia coardei
+      ctx.strokeStyle = "#666";
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+
+      // desenăm fiecare notă
+      notes.forEach(note => {
+        const x = note.time / 5; // scalare timp → pixeli
+        const width = note.length / 5;
+
+        // culoare bazată pe volum
+        const volumeColor = `hsl(${note.volume * 3.6}, 100%, 50%)`;
+        ctx.fillStyle = volumeColor;
+
+        ctx.fillRect(x, y - noteHeight / 2, width, noteHeight);
+
+        // text cu fret
+        ctx.fillStyle = "black";
+        ctx.fillText(note.fret, x + 4, y + 4);
+      });
+    });
+  </script>
 </body>
 </html>
